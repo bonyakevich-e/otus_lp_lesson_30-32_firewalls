@@ -27,17 +27,13 @@ $ vagrant ssh inetRouter
 root@inetRouter:~# systemctl stop ufw
 root@inetRouter:~# systemctl disable ufw
 ```
-Включаем маскарадинг:
-```
-root@inetRouter:~# iptables -t nat -A POSTROUTING ! -d 192.168.0.0/16 -o eth0 -j MASQUERADE
-```
 Устанавливаем пакеты для сохранения правил iptables:
 ```
 root@inetRouter:~# apt install netfilter-persistent iptables-persistent
 ```
-Сохраняем правила:
+Включаем маскарадинг:
 ```
-root@inetRouter:~# netfilter-persistent save
+root@inetRouter:~# iptables -t nat -A POSTROUTING ! -d 192.168.0.0/16 -o eth0 -j MASQUERADE
 ```
 Настраиваем правила для реализации port knocking:
 ```
@@ -57,7 +53,9 @@ root@inetRouter:~# iptables -A SSH-INPUT -m recent --name SSH1 --set -j DROP
 root@inetRouter:~# iptables -A SSH-INPUTTWO -m recent --name SSH2 --set -j DROP
 root@inetRouter:~# iptables -A INPUT -i eth1 -j TRAFFIC
 root@inetRouter:~# iptables -A TRAFFIC -i eth1 -j DROP
-
+```
+Сохраняем правила:
+```
 root@inetRouter:~# netfilter-persistent save
 ```
 Проверяем. Делаем попытку подключиться по ssh с centralRouter на inetRouter:
