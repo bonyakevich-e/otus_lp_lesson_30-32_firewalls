@@ -18,3 +18,24 @@
 #### ЗАДАЧА 1:
 _Настроить "knocking port" на роутере inetRouter. Результат: к роутеру inetRouter можно подключиться по ssh только если предварительно последовательно постучаться на порты tcp/8881, tcp/7777, tcp/9991._
 
+Подключаемся к роутеру inetRouter:
+```
+$ vagrant ssh inetRouter
+```
+Отключаем ufw:
+```
+root@inetRouter:~# systemctl stop ufw
+root@inetRouter:~# systemctl disable ufw
+```
+Включаем маскарадинг:
+```
+root@inetRouter:~# iptables -t nat -A POSTROUTING ! -d 192.168.0.0/16 -o eth0 -j MASQUERADE
+```
+Устанавливаем пакеты для сохранения правил iptables:
+```
+root@inetRouter:~# apt install netfilter-persistent iptables-persistent
+```
+Сохраняем правила:
+```
+root@inetRouter:~# netfilter-persistent save
+```
