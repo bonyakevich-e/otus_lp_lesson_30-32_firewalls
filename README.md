@@ -76,7 +76,7 @@ vagrant@centralRouter:~$ ssh root@192.168.255.1
 root@192.168.255.1's password: 
 ```
 Подключение по ssh работает. Значит port knocking настроен верно. 
-Чтобы не знучать какждый раз вручную (не вводить несколько команд), можно сделать скрипт:
+Чтобы не стучать каждый раз вручную (не вводить несколько команд), можно сделать скрипт:
 ```shell
 #!/bin/bash
 HOST=$1
@@ -124,7 +124,7 @@ root@inetRouter:~# apt install netfilter-persistent iptables-persistent
 root@inet2Router:~# echo "net.ipv4.conf.all.forwarding = 1" >> /etc/sysctl.conf
 root@inet2Router:~# sysctl -p
 ```
-Настриваем DNAT:
+Настраиваем DNAT:
 ```console
 root@inet2Router:~# iptables -t nat -I PREROUTING 1 -i eth2 -p tcp --dport 8080 -j DNAT --to-destination 192.168.1.2:80
 ```
@@ -132,7 +132,7 @@ root@inet2Router:~# iptables -t nat -I PREROUTING 1 -i eth2 -p tcp --dport 8080 
 ```console
 root@inet2Router:~# iptables -t nat -A POSTROUTING -o eth2 -j MASQUERADE
 ```
-На centralServer добавляем статический маршрут на к сети 192.168.56.0/24 через inet2Router:
+На centralServer добавляем статический маршрут к сети 192.168.56.0/24 через inet2Router:
 ```console
 vagrant@centralServer:~$ vim /etc/netplan/50-vagrant.yaml
 ```
