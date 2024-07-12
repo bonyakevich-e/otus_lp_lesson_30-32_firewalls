@@ -152,6 +152,10 @@ network:
 ```
 root@centralServer:~# netplan try
 ```
+Для проверки заходим в браузере на хосте по адресу http://192.168.56.2:8080. Если видимо приглашение от nginx, значит всё проброс работает:
+
+![image](https://github.com/user-attachments/assets/7ff4a844-5198-4d5e-852f-f4854a73dbec)
+
 #### ЗАДАЧА 5: 
 _Маршрут по умолчанию для centralServer и centralRouter настроить через inetRouter_
 
@@ -186,7 +190,7 @@ network:
       addresses:
       - 192.168.0.2/30
       routes:
-      - to: 0.0.0.0
+      - to: 0.0.0.0/0
         via: 192.168.0.1
     eth2:
       addresses:
@@ -197,3 +201,5 @@ network:
 ```
 
 Те же действия выполняем на centralServer.
+
+Для проверки заходим на centralServer и выполняем traceroute:
