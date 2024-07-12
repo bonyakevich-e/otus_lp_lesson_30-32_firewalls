@@ -203,3 +203,15 @@ network:
 Те же действия выполняем на centralServer.
 
 Для проверки заходим на centralServer и выполняем traceroute:
+```
+vagrant@centralServer:~$ traceroute -n 8.8.8.8
+traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
+ 1  192.168.0.1  0.857 ms  0.767 ms  0.726 ms
+ 2  192.168.255.1  1.591 ms  1.461 ms  1.421 ms
+ 3  10.0.2.2  2.151 ms  2.114 ms  2.074 ms
+ 4  * * *
+ 5  * * *
+...
+...
+...
+```
