@@ -123,9 +123,13 @@ root@inet2Router:~# sysctl -p
 ```
 Настриваем DNAT:
 ```
-root@inet2Router:~# iptables -t nat -I PREROUTING 1 -i eth1 -p tcp --dport 8080 -j DNAT --to-destination 192.168.1.2:80
+root@inet2Router:~# iptables -t nat -I PREROUTING 1 -i eth2 -p tcp --dport 8080 -j DNAT --to-destination 192.168.1.2:80
 ```
-Добавляем статический маршрут на centralServer к сети 192.168.56.0/24:
+Включаем маскарадинг:
+```
+root@inet2Router:~# iptables -t nat -A POSTROUTING -o eth2 -j MASQUERADE
+```
+На centralServer добавляем статический маршрут на к сети 192.168.56.0/24 через inet2Router:
 ```
 vagrant@centralServer:~$ vim /etc/netplan/50-vagrant.yaml
 ```
@@ -148,3 +152,48 @@ network:
 ```
 root@centralServer:~# netplan try
 ```
+#### ЗАДАЧА 5: 
+_Маршрут по умолчанию для centralServer и centralRouter настроить через inetRouter_
+
+На centralServer добавляем маршрут по умолчанию через centralRouter. 
+Отключаем получение маршрута по умолчанию по DHCP:
+```
+root@centralServer:~# vim /etc/netplan/00-installer-config.yaml
+```
+```yaml
+# This is the network config written by 'subiquity'
+network:
+  ethernets:
+    eth0:
+      dhcp4: true
+      dhcp4-overrides:
+        use-routes: false
+      dhcp6: false
+  version: 2
+
+```
+Добавляем статический маршрут по умолчанию через centralRouter:
+```
+vagrant@centralServer:~$ vim /etc/netplan/50-vagrant.yaml
+```
+```yaml
+---
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth1:
+      addresses:
+      - 192.168.0.2/30
+      routes:
+      - to: 0.0.0.0
+        via: 192.168.0.1
+    eth2:
+      addresses:
+      - 192.168.1.2/30
+      routes:
+      - to: 192.168.56.0/24
+        via: 192.168.1.1
+```
+
+Те же действия выполняем на centralServer.
